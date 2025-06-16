@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Build docker images
+        run: docker compose build 
+
+      - name: Run services
+        run: docker compose up -d 
+        
+      - name: Show running services
+        run: docker ps
+        
+      - name: Run tests
+        run: go test ./...
+        
+      - name: Stop services
+        if: always() 
+        run: docker compose down 
